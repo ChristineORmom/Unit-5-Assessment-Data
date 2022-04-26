@@ -12,33 +12,57 @@ const sequelize = new Sequelize(process.env.CONNECTION_STRING, {
 })
 
 const countries = 4
-
+const cities = 3
 
 module.exports = {
     getCountries: (req, res) => {
         sequelize.query(`SELECT * FROM countries`) 
-        .then (dbres => res.status(200).send(dbRes[0])) 
+        .then ((dbResult) => {
+            //console.log(dbResult);
+            res.status(200).send(dbResult[0]);
+        })
            
     },
 
     getCities: (req, res) => {
-        sequelize.query(
-            `SELECT rating, name AS city, cities.country_id, countries.country_id, name AS country`
-            FROM cities
-                JOIN countries
-                    ON cities.county_id = countries.county_id)
-        .then (dbRes => res.status(200).send(dbRes[0]))            
+        sequelize.query(`SELECT * FROM city_id AS city 
+            JOIN country_id AS country ON county_id = county_id
+            WHERE country_id = ${country_id};`)
+        .then ((dbResult) => {
+            //console.log(dbResult);
+            res.status(200).send(dbResult[0]);
+        })
+        .catch((err) => console.log(err));
+    },
+        
+    createCity: (req, res) => {
+        let {
+            name,
+            rating,
+            country_id
+        } = req.body
+
+        sequelize.query(`update city_id set name = '${name}',
+        rating = '${rating}',
+        WHERE city_id = ${city_id}`)
+            .then(() => res.sendStatus(200))
+            .catch(err => console.log(err))
+
     },
 
     deleteCities: (req, res) => {
-        sequelize.query('DELETE city_id FROM cities WHERE id = $`id to be deleted {city_id}`)
-        .then (dbRes => res.status(200).send(dbRes[0]))
+        sequelize.query('DELETE city_id FROM cities,
+        WHERE = `id to be deleted ${city_id}`)
+        .then ((dbResult) => {      
+            res.status(200).send(dbResult[0]);
+        })
+        .catch((err) => console.log(err));
             
     },
 
-    SELECT cities, COUNT(*)
-    GROUP BY rating
-    ORDER BY DESC;
+    
+
+    
 
     
 
